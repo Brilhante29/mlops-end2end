@@ -1,6 +1,6 @@
 # #21 mlops-end2end
 
-> **118.832 seconds median time to production:** three successful local lifecycle runs, ROC AUC `0.928441`, inference p95 `100.275 ms`, and no paid service or credential.
+> **371.941 seconds current time to production:** one successful local lifecycle run, ROC AUC `0.928441`, inference p95 `285.557 ms`, and no paid service or credential.
 
 This repository proves the complete operational path around a small CPU model: orchestration, data validation, experiment tracking, registry governance, quality-gated promotion, inference, telemetry, and reproducible evidence.
 
@@ -15,24 +15,24 @@ No API key, cloud account, GPU, host Python, shell-specific script, or manual pr
 
 ## Benchmark
 
-The primary metric starts inside the container before local metadata stores are initialized. It stops only when the Airflow Dag has completed and FastAPI is healthy with `models:/portfolio-risk-model@champion` loaded.
+The current baseline starts inside the container before local metadata stores are initialized. The image keeps the Airflow Dag as its orchestration contract and executes the same stages directly because a one-shot `docker run` does not start a scheduler. It stops only when FastAPI is healthy with `models:/portfolio-risk-model@champion` loaded.
 
 | Metric | Baseline | What it proves |
 |---|---:|---|
-| Time to production | **118.832 s median** (96.530-123.678) | Full lifecycle friction from empty runtime to healthy promoted model |
-| ROC AUC | **0.928441** in all runs | Candidate quality before promotion |
-| Inference p95 | **100.275 ms median** | Serving latency after promotion |
-| Throughput | **115.415 req/s median** | CPU request capacity for the fixed fixture |
-| Image size | **1.53 GB** (`-39.145%`) | Slim official Airflow base versus the regular reference image |
+| Time to production | **371.941 s** | Full lifecycle friction from empty runtime to healthy promoted model |
+| ROC AUC | **0.928441** | Candidate quality before promotion |
+| Inference p95 | **285.557 ms** | Serving latency after promotion |
+| Throughput | **37.975 req/s** | CPU request capacity for the fixed fixture |
+| Image size | not captured in this run | Supplementary image footprint, not part of the primary gate |
 
-Three runs used the same image content and deterministic fixture. Model quality was identical; lifecycle time had a 22.845% max-min range relative to the median, so the repository reports both the median and raw results.
+This committed JSON is the first current runtime baseline after the Airflow 3.3 execution fix. A three-run median remains the publication gate; this result is not presented as a cross-machine performance promise.
 
-| Lifecycle stage | Median |
+| Lifecycle stage | Current run |
 |---|---:|
-| MLflow startup | 22.870 s |
-| Airflow metadata migration | 14.621 s |
-| Airflow Dag, training, registry, and promotion | 62.431 s |
-| Alias-backed API startup | 18.856 s |
+| MLflow startup | 93.637 s |
+| Airflow metadata migration | 37.410 s |
+| Airflow stages, training, registry, and promotion | 165.203 s |
+| Alias-backed API startup | 75.691 s |
 
 The command prints the complete JSON result. A bind mount can persist it:
 

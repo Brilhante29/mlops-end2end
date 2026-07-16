@@ -8,7 +8,7 @@ Project: `21 - mlops-end2end`
 - [x] After architecture: pipeline became primary; ports retained only around material adapters.
 - [x] After first slice: stable Airflow SDK and MLflow alias rules recorded.
 - [x] After benchmark: dependency coexistence, metric fields, variance, image size, and failure diagnostics were reviewed.
-- [x] Before publication review: proven reusable rules were staged in the kit and synchronized into this working copy; publication remains gated by the rebuilt benchmark.
+- [x] Before publication review: proven reusable rules were staged in the kit and synchronized into this working copy; the current Docker benchmark is now persisted; publication remains gated by a three-run median.
 - [x] After validation failure: CRLF/LF handling and tool availability became portable validation rules.
 
 ## Findings

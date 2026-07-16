@@ -191,7 +191,10 @@ def run_benchmark() -> dict[str, Any]:
             environment,
         )
         processes.append((mlflow_process, mlflow_handle, mlflow_log))
-        _wait_ready(f"{settings.tracking_uri}/health", 90)
+        _wait_ready(
+            f"{settings.tracking_uri}/health",
+            float(os.getenv("MLFLOW_STARTUP_TIMEOUT_SECONDS", "180")),
+        )
         stage_timings["mlflow_startup_seconds"] = time.perf_counter() - stage_started
 
         stage_started = time.perf_counter()

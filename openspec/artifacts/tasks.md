@@ -13,7 +13,7 @@
 - [x] Implement the measurable claim without breaking the recorded architecture boundary.
 - [x] Keep local skills and `.portfolio/` as primary.
 - [x] Record external references in `REFERENCES.md`.
-- [ ] Commit benchmark JSON and the matching README number.
+- [x] Commit benchmark JSON and the matching README number.
 
 ## Publication
 

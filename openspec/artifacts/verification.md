@@ -16,7 +16,7 @@
 ## Checks
 
 - Component pack selected: `mlops-data-platform`
-- Benchmark line: time_to_production_seconds_median = pending seconds
+- Benchmark line: time_to_production_seconds = 371.94 seconds
 - Voice verdict: aligned
 
 ## Remaining Risk

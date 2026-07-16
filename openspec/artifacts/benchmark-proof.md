@@ -2,9 +2,9 @@
 
 ## Primary Metric
 
-- Metric: `time_to_production_seconds_median`
+- Metric: `time_to_production_seconds`
 - Unit: `seconds`
-- Result: time_to_production_seconds_median = pending seconds
+- Result: time_to_production_seconds = 371.94 seconds
 - Result path: `benchmarks/results/summary.json`
 
 ## Command

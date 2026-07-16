@@ -1,0 +1,48 @@
+{
+  "command": "docker run --rm mlops-end2end",
+  "environment": {
+    "airflow": "3.3.0",
+    "architecture": "x86_64",
+    "concurrency": 8,
+    "cpu_count": 16,
+    "inference_window": "after API readiness and warmup",
+    "lifecycle_window": "process start through alias-backed API readiness",
+    "mlflow": "3.14.0",
+    "os": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "python": "3.12.13",
+    "random_seed": 42,
+    "requests": 300,
+    "sample_count": 1200,
+    "scikit_learn": "1.9.0",
+    "warmup_requests": 20
+  },
+  "failures": 0,
+  "metric": "time_to_production_seconds",
+  "metrics": {
+    "accuracy": 0.87,
+    "airflow_migration_seconds": 37.41,
+    "api_startup_seconds": 75.691,
+    "inference_p50_ms": 206.061,
+    "inference_p95_ms": 285.557,
+    "inference_requests_per_second": 37.975,
+    "mlflow_startup_seconds": 93.637,
+    "pipeline_seconds": 165.203,
+    "roc_auc": 0.928441,
+    "time_to_production_seconds": 371.941
+  },
+  "project": "mlops-end2end",
+  "proof": {
+    "dag_id": "mlops_end2end",
+    "lifecycle_completed": true,
+    "model_alias": "champion",
+    "model_version": "1",
+    "prometheus_predictions_exported": true,
+    "quality_threshold": 0.8,
+    "readiness_payload_parsed": true,
+    "registered_model": "portfolio-risk-model",
+    "run_id": "3fc103203e814820b34d76f03d234a35"
+  },
+  "timestamp": "2026-07-16T06:03:05.237906+00:00",
+  "unit": "seconds",
+  "value": 371.941
+}

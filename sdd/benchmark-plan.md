@@ -43,15 +43,15 @@ To persist evidence, set `BENCHMARK_OUTPUT` to a mounted path. The JSON includes
 - Do not average away failures. Any failed stage invalidates the run and must be preserved with its reason.
 - Do not compare time-to-production across machines without publishing environment differences.
 
-## Measured Result
+## Current Baseline
 
-- Three successful runs: 96.530 s, 118.832 s, and 123.678 s.
-- Public result: 118.832 s median; 113.013 s mean; 22.845% max-min range relative to median.
-- Median stages: MLflow 22.870 s, Airflow migration 14.621 s, pipeline 62.431 s, API 18.856 s.
+- One successful Docker run: 371.941 s from clean runtime initialization to alias-backed API readiness.
+- Current result: 371.941 s. A three-run median remains the publication gate; this baseline is not a cross-machine performance promise.
+- Current stages: MLflow 93.637 s, Airflow migration 37.410 s, pipeline 165.203 s, API 75.691 s.
 - Quality was identical across all runs: ROC AUC 0.928441 and accuracy 0.87.
-- Serving medians: p50 66.852 ms, p95 100.275 ms, and 115.415 requests/second.
-- Validated image: `sha256:e12a38165f83bfbc775fec66f86f606c3825c027a927bd383c6120105672bff5`, 1,532,159,242 bytes.
-- Raw evidence and the consolidated result are committed under `benchmarks/results/`.
+- Current serving result: p50 206.061 ms, p95 285.557 ms, and 37.975 requests/second.
+- Image size was not captured in this baseline; it remains a supplementary measurement, not the primary gate.
+- The consolidated current result is committed at `benchmarks/results/summary.json`.
 ## Post Angle
 
-`#21 mlops-end2end: 118.832 seconds median from an empty local runtime to a quality-gated, alias-backed, monitored model API; AUC 0.928441 and p95 100.275 ms included.`
+`#21 mlops-end2end: 371.941 seconds from an empty local runtime to a quality-gated, alias-backed, monitored model API; AUC 0.928441 and p95 285.557 ms included.`

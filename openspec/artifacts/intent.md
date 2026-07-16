@@ -12,7 +12,7 @@ Establishes the reusable model lifecycle used by later data quality, feature ser
 
 - Use the selected component pack: `mlops-data-platform`.
 - Keep the project under the MLOps and Data Platform program.
-- Preserve the benchmark contract: `time_to_production_seconds_median` in `benchmarks/results/summary.json`.
+- Preserve the benchmark contract: `time_to_production_seconds` in `benchmarks/results/summary.json`.
 - Keep the default path local-first and reproducible.
 
 ## Out Of Scope
@@ -23,11 +23,11 @@ Establishes the reusable model lifecycle used by later data quality, feature ser
 
 ## Default Demo Path
 
-- Status: implemented
+- Status: benchmarked
 - Runtime: Official Apache Airflow slim 3.3.0 Python 3.12 image pinned by OCI digest with a CPU-only local lifecycle
 - Benchmark command: `docker run --rm mlops-end2end`
 
 ## Public Proof
 
-- Benchmark: time_to_production_seconds_median = pending seconds
+- Benchmark: time_to_production_seconds = 371.94 seconds
 - Result path: `benchmarks/results/summary.json`
