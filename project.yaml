@@ -1,0 +1,151 @@
+id: 21
+name: mlops-end2end
+program:
+  id: mlops-data-platform
+  narrative_fit: "Establishes the reusable model lifecycle used by later data quality, feature serving, drift detection, and applied-vision projects."
+  shared_assets:
+    - deterministic dataset and data contract
+    - model quality gate and registry port
+    - MLflow alias-backed deployment contract
+    - Airflow lifecycle Dag
+    - train-to-production benchmark schema
+status: implemented
+claim: "A single local-first command validates data, trains and quality-gates a model, promotes an MLflow alias, serves it with FastAPI, exports Prometheus metrics, and measures elapsed time to production."
+stack:
+  - python-3.12
+  - apache-airflow-3.3.0
+  - mlflow-3.14.0
+  - fastapi-0.136.3
+  - scikit-learn-1.9.0
+  - pandera-0.32.1
+  - prometheus-client-0.25.0
+  - docker
+language_profile:
+  primary: python
+  secondary:
+    - fastapi-backend
+  reason: "Python supplies the native ecosystem for orchestration, experiment tracking, data validation, model training, and typed inference while keeping the default proof CPU-only."
+decision_brain:
+  agentic_spec:
+    source: .portfolio/decision-brain/agentic-spec-governance.yaml
+    spec_store: portfolio-reuse-kit
+    schema: portfolio-system
+    project_config: openspec/config.yaml
+    component_pack: mlops-data-platform
+    artifact_graph:
+      - intent->portfolio-impact->architecture-record
+      - architecture-record+portfolio-impact->component-pack
+      - component-pack->reuse-delta->benchmark-proof->tasks->verification
+  agent_graph:
+    mode: principal-agent-orchestrated
+    source: .portfolio/decision-brain/agent-graph.yaml
+    handoff: sdd/agent-handoff.md
+    local_first_runtime: docker
+  reuse_improvement_loop:
+    source: .portfolio/decision-brain/reuse-improvement-loop.yaml
+    review_path: sdd/reuse-improvement-review.md
+    current_status: patched-awaiting-runtime-validation
+  principles:
+    coupling_rule: "Domain quality policy and application promotion flow import no Airflow, MLflow, FastAPI, database, broker, cloud SDK, or UI code."
+    solid: [srp, ocp, lsp, isp, dip]
+    simplicity_rule: "Use one image, one Dag, one candidate model, one alias, and one benchmark; do not add distributed infrastructure before a measured force requires it."
+    testability_rule: "The quality gate runs against a recording registry adapter, data validation runs on local fixtures, and the full adapters run through Docker."
+    rejected_overengineering:
+      - microservices
+      - Kubernetes
+      - Kafka or RabbitMQ
+      - distributed Airflow executor
+      - cloud deployment
+      - notebook runtime
+      - drift detection in this repository
+  stack_profile: python-ml
+  api_style: rest-http
+  messaging: none
+  cloud:
+    mode: none
+    local_provider: none
+    real_provider_target: none
+    emulated_services: []
+    adapter_rule: "No cloud behavior exists in the measured path; if AWS behavior is introduced later, define a port and verify it against Kumo before enabling real AWS."
+    config_switch: not-applicable
+    unsupported_behaviors:
+      - managed MLflow or Airflow control planes
+      - cloud object storage
+      - autoscaling and multi-zone availability
+  database: "SQLite for ephemeral Airflow and MLflow metadata"
+  runtime: "Official Apache Airflow slim 3.3.0 Python 3.12 image pinned by OCI digest with a CPU-only local lifecycle"
+  library_policy: "Use the stable Airflow Task SDK, MLflow database-backed registry aliases, Pandera at the data boundary, scikit-learn for deterministic CPU training, FastAPI/Pydantic for inference contracts, and Prometheus for framework-neutral metrics."
+  record_path: sdd/technical-decision.md
+  rejected_options:
+    - option: Prefect instead of Airflow
+      reason: "Airflow is an explicit proficiency target and its Dag dependencies, retries, and stable Task SDK directly prove the orchestration claim."
+    - option: Kafka or RabbitMQ
+      reason: "The lifecycle is a bounded dependency graph with no event stream, fan-out, or asynchronous throughput target."
+    - option: GraphQL
+      reason: "Inference is one command-shaped operation with a fixed typed payload; REST exposes the contract with less client and operational complexity."
+    - option: Kumo or real cloud
+      reason: "This repository exercises no AWS service, so adding cloud emulation would create a fake boundary instead of proving the lifecycle."
+architecture:
+  style: pipeline
+  reason: "The problem is an ordered artifact lifecycle with retryable stages; pipeline architecture makes data, candidate, promotion, service, and evidence transitions explicit."
+  problem_forces:
+    domain_complexity: medium
+    integration_pressure: high
+    ui_state_complexity: none
+    data_or_ml_reproducibility: high
+    auditability: high
+    throughput_or_async: low
+    independent_deployability: low
+  dependency_rule: "Airflow and MLflow adapters depend inward on application ports and domain policy; stages exchange artifact paths and identifiers instead of framework objects or large XCom payloads."
+  boundaries:
+    - deterministic data generation and Pandera contract
+    - framework-independent model quality and promotion policy
+    - scikit-learn training and MLflow tracking adapter
+    - MLflow registry alias adapter
+    - Airflow orchestration Dag
+    - FastAPI inference and Prometheus telemetry
+    - lifecycle benchmark and JSON evidence
+  rejected_alternatives:
+    - style: layered-mvc
+      reason: "Controller-service-repository layers do not express ordered artifact transitions, retries, or reproducibility as clearly as stages."
+    - style: hexagonal-as-primary
+      reason: "Ports are useful around the registry, but the dominant system force is the lifecycle graph rather than many interchangeable external actors."
+    - style: microservices
+      reason: "There is one bounded proof and no independent scaling or deployment requirement; network splits would inflate time-to-production."
+design_system:
+  tokens: .portfolio/design-system/tokens.yaml
+  readme_components:
+    - readme_header
+    - benchmark_card
+    - architecture_card
+    - references_table
+  diagram_required: true
+reuse:
+  kit_version: ml-lifecycle-update-pending-publication
+  uses:
+    - catalog
+    - programs
+    - component-packs
+    - openspec-schema
+    - decision-brain
+    - agent-graph
+    - reuse-improvement-loop
+    - architecture-selector
+    - python-language-profile
+    - python-ml-lifecycle
+    - fastapi-backend-profile
+    - design-system
+    - sdd
+    - benchmark-contract
+    - skills
+benchmark:
+  primary_metric: time_to_production_seconds_median
+  unit: seconds
+  command: "docker run --rm mlops-end2end"
+  result_path: benchmarks/results/summary.json
+  evidence_status: invalidated
+release:
+  docker: "docker run --rm mlops-end2end"
+  no_secret_default_path: true
+  readme_has_number: true
+  references_documented: true

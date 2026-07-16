@@ -2,33 +2,35 @@ schema: portfolio-system
 references:
   - portfolio-reuse-kit
 context: |
-  Project: mlops-end2end (#unknown)
+  Project: mlops-end2end (#21)
+  Program: mlops-data-platform
+  Claim: move a deterministic model from validated data to a monitored, alias-backed API and measure time to production.
   Source of truth:
     - Use `.portfolio/` as the local snapshot of portfolio-reuse-kit.
     - Use `project.yaml` for the public project contract.
-    - Use `sdd/` for lightweight artifacts that must exist even without OpenSpec installed.
+    - Use `sdd/` for durable lightweight decisions.
+    - Use `openspec/changes/ship-mlops-end2end/` for approved scope, requirements, self-challenge, and tasks.
   Core rules:
-    - Prove one measurable claim.
-    - Select one component pack from `.portfolio/component-packs/manifest.yaml`.
-    - Record architecture, stack, API, messaging, cloud, database/runtime, and library choices with rejected alternatives.
-    - Keep domain/use-case code independent from framework, database, broker, cloud SDK, transport, and UI.
-    - Prefer local-first execution; use Kumo for AWS-like behavior and adapters for real cloud.
-    - Resolve reuse improvements as patch-now, backlog, or reject.
+    - Prove one measurable lifecycle claim.
+    - Keep domain/application policy independent from orchestration, registry, API, database, broker, cloud SDK, and UI.
+    - Default to one secret-free Docker command on Linux, macOS, and Windows.
+    - Resolve reuse improvements as patch-now, backlog, or reject after measured evidence.
 rules:
   reference-reuse:
-    - Prioritize local skills and `.portfolio/`; use external repositories only as attributed references unless a decision record explicitly accepts deeper reuse.
+    - Prioritize local skills and `.portfolio/`; external repositories are attributed organizational references unless a decision explicitly accepts code reuse.
   intent:
-    - Keep the claim measurable and README-ready.
-  portfolio-impact:
-    - Explain how this repo strengthens a macro project, not just itself.
+    - Keep the claim README-ready and measure lifecycle, model quality, and serving behavior separately.
   architecture-record:
-    - Include SOLID, LSP, KISS, YAGNI, dependency inversion, and testability evidence.
+    - Explain the dominant problem force before naming an architecture.
+    - Include SOLID, LSP, DIP, KISS, YAGNI, DRY, dependency direction, and testability evidence.
+  self-challenge:
+    - Ask whether Airflow, MLflow, a broker, cloud, microservices, drift, and each abstraction solve a present measured force.
+    - Reject or defer every choice whose answer is no.
   component-pack:
-    - Select from `.portfolio/component-packs/manifest.yaml`.
-    - Do not install external tools without explicit approval.
-  reuse-delta:
-    - Record whether the kit improved because of this project.
+    - Use `mlops-data-platform` and document deviations.
   benchmark-proof:
-    - Include metric, unit, command, fixture, JSON path, and README result.
+    - Include metric, unit, command, deterministic fixture, environment, JSON path, registry identifiers, and telemetry evidence.
+  reuse-delta:
+    - Patch the kit only after the full Docker proof confirms a reusable rule.
   verification:
-    - Verify Docker, tests, benchmark JSON, README, references, reuse review, and validation.
+    - Verify Docker, tests, coverage, benchmark JSON, README, references, reuse review, clean git state, and public CI.

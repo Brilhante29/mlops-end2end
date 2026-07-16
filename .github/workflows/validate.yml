@@ -1,0 +1,52 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate portfolio contract
+        shell: pwsh
+        run: ./tools/validate-project.ps1 -SkipDocker
+
+      - name: Build reproducible image
+        run: docker build --tag mlops-end2end:${{ github.sha }} .
+
+      - name: Lint
+        run: docker run --rm --entrypoint ruff mlops-end2end:${{ github.sha }} check src tests dags
+
+      - name: Test complete suite
+        run: docker run --rm --entrypoint pytest mlops-end2end:${{ github.sha }} -q
+
+      - name: Test core with focused coverage
+        run: >-
+          docker run --rm --entrypoint pytest mlops-end2end:${{ github.sha }}
+          tests/test_quality.py tests/test_data.py tests/test_runner.py
+          --cov=mlops_end2end.domain
+          --cov=mlops_end2end.application
+          --cov=mlops_end2end.adapters.data
+          --cov-report=term-missing
+          --cov-fail-under=80
+
+      - name: Run train-to-production benchmark
+        run: |
+          mkdir -p benchmarks/results
+          docker run --rm \
+            --volume "$PWD/benchmarks/results:/results" \
+            --env BENCHMARK_OUTPUT=/results/ci.json \
+            mlops-end2end:${{ github.sha }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: mlops-end2end-benchmark
+          path: benchmarks/results/ci.json

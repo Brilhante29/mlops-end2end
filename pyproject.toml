@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=82"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlops-end2end"
+version = "0.1.0"
+description = "A reproducible train-to-production MLOps reference system."
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "apache-airflow==3.3.0",
+  "fastapi==0.136.3",
+  "mlflow==3.14.0",
+  "numpy==1.26.4",
+  "pandas==2.1.4",
+  "pandera==0.32.1",
+  "prometheus-client==0.25.0",
+  "pydantic==2.13.4",
+  "scikit-learn==1.9.0",
+  "uvicorn==0.49.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx==0.28.1",
+  "pytest==9.1.1",
+  "pytest-cov==7.0.0",
+  "ruff==0.15.21",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.coverage.run]
+source = ["mlops_end2end"]
+omit = ["*/runner.py", "*/api.py"]
+
