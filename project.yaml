@@ -9,7 +9,7 @@ program:
     - MLflow alias-backed deployment contract
     - Airflow lifecycle Dag
     - train-to-production benchmark schema
-status: published
+status: implemented
 claim: "A single local-first command validates data, trains and quality-gates a model, promotes an MLflow alias, serves it with FastAPI, exports Prometheus metrics, and measures elapsed time to production."
 stack:
   - python-3.12
