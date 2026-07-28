@@ -13,7 +13,7 @@ known portfolio risk.
 
 ## Scope
 
-- In scope: <scope>
+- In scope: End-to-end MLOps pipeline including data validation, model training, MLflow tracking, FastAPI serving, and benchmark measurement.
 - Out of scope: paid credentials, unrelated infrastructure, and unmeasured features.
 
 ## Portfolio Impact
