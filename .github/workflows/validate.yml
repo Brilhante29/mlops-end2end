@@ -46,10 +46,15 @@ jobs:
       - name: Run train-to-production benchmark
         run: |
           mkdir -p benchmarks/results
-          docker run --rm \
-            --volume "$PWD/benchmarks/results:/results" \
-            --env BENCHMARK_OUTPUT=/results/ci.json \
+          # The image runs as uid 50000 (airflow), which cannot write into a
+          # bind mount owned by the runner user. Write inside the container and
+          # copy the artifact out instead of coupling to host ownership.
+          docker run --name benchmark \
+            --env BENCHMARK_OUTPUT=/tmp/ci.json \
             mlops-end2end:${{ github.sha }}
+          docker cp benchmark:/tmp/ci.json benchmarks/results/ci.json
+          docker rm benchmark
+          python -m json.tool benchmarks/results/ci.json >/dev/null
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.0
         with:
