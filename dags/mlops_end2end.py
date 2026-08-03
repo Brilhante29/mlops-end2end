@@ -3,7 +3,6 @@ from __future__ import annotations
 import pendulum
 from airflow.sdk import dag, task
 
-from mlops_end2end.config import Settings
 from mlops_end2end.pipeline import generate_stage, promote_stage, train_stage
 
 
@@ -36,11 +35,3 @@ def build_pipeline():
 
 
 mlops_pipeline = build_pipeline()
-
-if __name__ == "__main__":
-    # The single-container benchmark keeps Airflow as the orchestration contract
-    # and executes the same stages directly, avoiding a hidden scheduler process.
-    settings = Settings.from_env()
-    generate_stage(settings)
-    train_stage(settings)
-    promote_stage(settings)

@@ -7,7 +7,6 @@ import os
 import platform
 import shutil
 import subprocess
-import sys
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -70,19 +69,6 @@ def _wait_json(url: str, timeout_seconds: float) -> dict[str, Any]:
     raise TimeoutError(f"{url} was not ready after {timeout_seconds}s: {last_error}")
 
 
-def _wait_ready(url: str, timeout_seconds: float) -> None:
-    deadline = time.monotonic() + timeout_seconds
-    last_error = "no response"
-    while time.monotonic() < deadline:
-        try:
-            with urllib.request.urlopen(url, timeout=2) as response:
-                if response.status == 200:
-                    return
-        except Exception as exc:  # noqa: BLE001 - readiness retries all transport failures
-            last_error = str(exc)
-        time.sleep(0.25)
-    raise TimeoutError(f"{url} was not ready after {timeout_seconds}s: {last_error}")
-
 
 def _post_prediction(api_url: str, features: list[float]) -> float:
     request = urllib.request.Request(
@@ -129,6 +115,23 @@ def _configure_environment(settings: Settings) -> dict[str, str]:
     return environment
 
 
+AIRFLOW_DAG_ID = "mlops_end2end"
+AIRFLOW_DAG_PATH = "/opt/portfolio/dags/mlops_end2end.py"
+AIRFLOW_LOGICAL_DATE = "2026-01-01T00:00:00+00:00"
+
+
+def _airflow_dag_test_command() -> list[str]:
+    return [
+        "airflow",
+        "dags",
+        "test",
+        AIRFLOW_DAG_ID,
+        AIRFLOW_LOGICAL_DATE,
+        "--dagfile-path",
+        AIRFLOW_DAG_PATH,
+    ]
+
+
 def _benchmark_api(
     api_url: str, requests: int, concurrency: int, warmup_requests: int
 ) -> dict[str, float]:
@@ -163,53 +166,24 @@ def run_benchmark() -> dict[str, Any]:
     settings.prepare()
     log_dir = settings.runtime_dir / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
-    mlflow_dir = settings.runtime_dir / "mlflow"
-    artifact_dir = mlflow_dir / "artifacts"
-    artifact_dir.mkdir(parents=True, exist_ok=True)
     environment = _configure_environment(settings)
 
     processes: list[tuple[subprocess.Popen[str], Any, Path]] = []
-    current_stage = "mlflow_startup"
+    current_stage = "airflow_migration"
     try:
-        mlflow_log = log_dir / "mlflow.log"
-        mlflow_process, mlflow_handle = _start_logged(
-            [
-                "mlflow",
-                "server",
-                "--host",
-                "127.0.0.1",
-                "--port",
-                "5000",
-                "--workers",
-                "1",
-                "--backend-store-uri",
-                f"sqlite:///{(mlflow_dir / 'mlflow.db').as_posix()}",
-                "--default-artifact-root",
-                artifact_dir.as_uri(),
-            ],
-            mlflow_log,
-            environment,
-        )
-        processes.append((mlflow_process, mlflow_handle, mlflow_log))
-        _wait_ready(
-            f"{settings.tracking_uri}/health",
-            float(os.getenv("MLFLOW_STARTUP_TIMEOUT_SECONDS", "180")),
-        )
-        stage_timings["mlflow_startup_seconds"] = time.perf_counter() - stage_started
-
         stage_started = time.perf_counter()
         current_stage = "airflow_migration"
         _run_logged(["airflow", "db", "migrate"], log_dir / "airflow-db.log", environment)
         stage_timings["airflow_migration_seconds"] = time.perf_counter() - stage_started
 
         stage_started = time.perf_counter()
-        current_stage = "pipeline"
+        current_stage = "airflow_dag_run"
         _run_logged(
-            [sys.executable, "-m", "dags.mlops_end2end"],
+            _airflow_dag_test_command(),
             log_dir / "pipeline.log",
             environment,
         )
-        stage_timings["pipeline_seconds"] = time.perf_counter() - stage_started
+        stage_timings["airflow_dag_run_seconds"] = time.perf_counter() - stage_started
 
         stage_started = time.perf_counter()
         current_stage = "api_startup"
@@ -271,7 +245,10 @@ def run_benchmark() -> dict[str, Any]:
                 **api_metrics,
             },
             "proof": {
-                "dag_id": "mlops_end2end",
+                "dag_id": AIRFLOW_DAG_ID,
+                "airflow_execution_mode": "dags-test",
+                "mlflow_tracking_backend": "sqlite-direct",
+                "airflow_logical_date": AIRFLOW_LOGICAL_DATE,
                 "registered_model": settings.model_name,
                 "model_alias": health["alias"],
                 "model_version": health["version"],

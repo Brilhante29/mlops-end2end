@@ -32,3 +32,7 @@ Project: `21 - mlops-end2end`
 - [x] Reusable improvements were patched or recorded.
 - [x] Project-specific implementation was not moved into the kit.
 - [x] Validation reflects Airflow version safety, OCI digest pinning, lifecycle evidence freshness, and cross-platform text handling.
+
+## Runtime Efficiency Finding
+
+SQLite direct tracking removes a redundant local MLflow HTTP process while preserving experiments, registered versions, aliases, artifact loading, and the adapter boundary. Keep this implementation local; add the decision rule to the kit only after the exact benchmark evidence confirms the behavior.

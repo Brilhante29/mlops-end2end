@@ -17,8 +17,7 @@ COPY tests ./tests
 ENV PYTHONPATH=/opt/portfolio/src \
     PYTHONUNBUFFERED=1 \
     AIRFLOW_HOME=/tmp/mlops-end2end/airflow \
-    MLOPS_RUNTIME_DIR=/tmp/mlops-end2end \
-    MLFLOW_TRACKING_URI=http://127.0.0.1:5000
+    MLOPS_RUNTIME_DIR=/tmp/mlops-end2end
 
 ENTRYPOINT ["python", "-m", "mlops_end2end.runner"]
 CMD ["benchmark"]

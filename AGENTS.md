@@ -53,3 +53,5 @@ Do not present this repository as portfolio-ready until it has:
 - complete `REFERENCES.md`
 - complete `sdd/reuse-improvement-review.md` with all final gate checks marked
 - passing validation
+
+Before creating publication evidence, read `.codex/skills/publish-benchmark-evidence/SKILL.md`. Use the project-specific producer for this three-run lifecycle benchmark.

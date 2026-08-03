@@ -18,3 +18,5 @@ Use the same execution graph as Codex:
 Do not install external AITmpl components or other machine-level tooling unless
 the user explicitly asks for it. Local skills and `.portfolio/` remain the
 primary source of truth.
+
+Before creating publication evidence, read `.claude/skills/publish-benchmark-evidence/SKILL.md`. Use the project-specific producer for this three-run lifecycle benchmark.

@@ -55,7 +55,14 @@ def train_candidate(settings: Settings) -> CandidateMetrics:
     accuracy = float(accuracy_score(test_y, predictions))
 
     mlflow.set_tracking_uri(settings.tracking_uri)
-    mlflow.set_experiment("portfolio-mlops-end2end")
+    experiment_name = "portfolio-mlops-end2end"
+    client = MlflowClient(tracking_uri=settings.tracking_uri)
+    if client.get_experiment_by_name(experiment_name) is None:
+        client.create_experiment(
+            experiment_name,
+            artifact_location=settings.artifact_dir.as_uri(),
+        )
+    mlflow.set_experiment(experiment_name)
     with mlflow.start_run(run_name="deterministic-logistic-regression") as run:
         mlflow.log_params(
             {
@@ -75,7 +82,6 @@ def train_candidate(settings: Settings) -> CandidateMetrics:
         )
         run_id = run.info.run_id
 
-    client = MlflowClient(tracking_uri=settings.tracking_uri)
     candidate = CandidateMetrics(
         run_id=run_id,
         model_version=_registered_version(client, settings.model_name, run_id),

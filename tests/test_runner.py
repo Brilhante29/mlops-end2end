@@ -1,5 +1,5 @@
 from mlops_end2end import runner
-from mlops_end2end.runner import _percentile
+from mlops_end2end.runner import _airflow_dag_test_command, _percentile
 
 
 def test_percentile_uses_nearest_rank() -> None:
@@ -25,3 +25,15 @@ def test_api_benchmark_separates_warmup_from_measured_requests(monkeypatch) -> N
     assert result["inference_p50_ms"] == 1.0
     assert result["inference_p95_ms"] == 1.0
     assert result["inference_requests_per_second"] > 0
+
+
+def test_airflow_command_executes_the_versioned_dag() -> None:
+    assert _airflow_dag_test_command() == [
+        "airflow",
+        "dags",
+        "test",
+        "mlops_end2end",
+        "2026-01-01T00:00:00+00:00",
+        "--dagfile-path",
+        "/opt/portfolio/dags/mlops_end2end.py",
+    ]

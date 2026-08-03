@@ -35,7 +35,7 @@ Ship #21 as the first executable foundation of the MLOps and Data Platform progr
 
 - Dependency conflict: preserve Airflow 3.3.0 and its official image contract before changing an app dependency.
 - Dag failure: read `pipeline.log`; do not bypass orchestration in the benchmark.
-- Registry failure: confirm database-backed MLflow server and registered version before alias assignment.
+- Registry failure: confirm the direct SQLite tracking URI, local artifact path, and registered version before alias assignment.
 - Service failure: confirm alias resolution and pyfunc `predict_proba` output before loosening health checks.
 - Slow result: report environment and stage evidence before optimizing or removing required lifecycle work.
 

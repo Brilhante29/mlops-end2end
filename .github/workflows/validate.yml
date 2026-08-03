@@ -17,12 +17,15 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-      - name: Install package
-        run: pip install -e .
-
       - name: Validate portfolio contract
         shell: pwsh
-        run: ./tools/validate-project.ps1 -SkipDocker
+        run: |
+          $status = (Select-String -Path project.yaml -Pattern '^status:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
+          if ($status -in @('planned', 'scaffolded', 'implemented')) {
+            ./tools/validate-project.ps1 -SkipDocker -AllowPendingEvidence
+          } else {
+            ./tools/validate-project.ps1 -SkipDocker
+          }
 
       - name: Build reproducible image
         run: docker build --tag mlops-end2end:${{ github.sha }} .

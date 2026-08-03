@@ -1,6 +1,6 @@
 # #21 mlops-end2end
 
-> **371.941 seconds current time to production:** one successful local lifecycle run, ROC AUC `0.928441`, inference p95 `285.557 ms`, and no paid service or credential.
+> **371.941 seconds historical direct-stage baseline:** retained for comparison, but not current Airflow task-execution evidence. ROC AUC was `0.928441` and inference p95 was `285.557 ms`.
 
 This repository proves the complete operational path around a small CPU model: orchestration, data validation, experiment tracking, registry governance, quality-gated promotion, inference, telemetry, and reproducible evidence.
 
@@ -15,7 +15,7 @@ No API key, cloud account, GPU, host Python, shell-specific script, or manual pr
 
 ## Benchmark
 
-The current baseline starts inside the container before local metadata stores are initialized. The image keeps the Airflow Dag as its orchestration contract and executes the same stages directly because a one-shot `docker run` does not start a scheduler. It stops only when FastAPI is healthy with `models:/portfolio-risk-model@champion` loaded.
+The historical baseline starts inside the container before local metadata stores are initialized, but it executed the stage functions directly. The current source now runs a real Airflow `dags test` DagRun; publication waits for three successful same-image runs and a new median.
 
 | Metric | Baseline | What it proves |
 |---|---:|---|
@@ -25,7 +25,7 @@ The current baseline starts inside the container before local metadata stores ar
 | Throughput | **37.975 req/s** | CPU request capacity for the fixed fixture |
 | Image size | not captured in this run | Supplementary image footprint, not part of the primary gate |
 
-This committed JSON is the first current runtime baseline after the Airflow 3.3 execution fix. A three-run median remains the publication gate; this result is not presented as a cross-machine performance promise.
+This committed JSON is historical evidence from the direct-stage path. It is intentionally stale after the Airflow task-execution correction and is not the publication result.
 
 | Lifecycle stage | Current run |
 |---|---:|
@@ -45,6 +45,12 @@ docker run --rm \
 
 PowerShell uses the same image with `${PWD}` in the volume value.
 
+Publication evidence runs three clean lifecycle containers and writes raw V1 plus provenance-rich V2 JSON:
+
+```bash
+python tools/publish_benchmark.py
+```
+
 ## System
 
 ```mermaid
@@ -60,12 +66,12 @@ flowchart LR
   I --> J["Benchmark JSON"]
 ```
 
-Pipeline architecture is the primary style because the problem is an ordered, retryable artifact lifecycle. A ports-and-adapters boundary is used only where it earns its cost: the domain quality policy depends on a small registry port, not MLflow. Airflow, MLflow, FastAPI, storage, and Prometheus remain outside that policy.
+Pipeline architecture is the primary style because the problem is an ordered, retryable artifact lifecycle. A ports-and-adapters boundary is used only where it earns its cost: the domain quality policy depends on a small registry port, not MLflow. Airflow, MLflow, FastAPI, storage, and Prometheus remain outside that policy. The lifecycle now executes the versioned DAG through `airflow dags test`, so task dependencies and retries are part of the proof.
 
 ## Decisions
 
 - **Airflow:** dependencies, retries, and stage evidence are part of the claim; the Dag uses the stable Airflow 3 `airflow.sdk` surface and the official slim image pinned by OCI digest.
-- **MLflow:** a database-backed local registry records runs and versions; FastAPI resolves the mutable `champion` alias instead of a hard-coded version.
+- **MLflow:** the local path uses the registry directly through SQLite, avoiding a redundant HTTP server; FastAPI still resolves the mutable `champion` alias instead of a hard-coded version.
 - **REST:** prediction is one fixed command-shaped operation. GraphQL adds no selection or aggregation value here.
 - **No broker:** there is no event stream, fan-out, or asynchronous throughput requirement, so Kafka and RabbitMQ would be decorative.
 - **No cloud:** the measured path exercises no AWS behavior. Kumo becomes the first local option only when a concrete AWS service enters scope.

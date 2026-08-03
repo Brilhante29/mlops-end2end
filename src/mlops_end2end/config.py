@@ -18,9 +18,11 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> Settings:
+        runtime_dir = Path(os.getenv("MLOPS_RUNTIME_DIR", "/tmp/mlops-end2end"))
+        default_tracking_uri = f"sqlite:///{(runtime_dir / 'mlflow' / 'mlflow.db').as_posix()}"
         return cls(
-            runtime_dir=Path(os.getenv("MLOPS_RUNTIME_DIR", "/tmp/mlops-end2end")),
-            tracking_uri=os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000"),
+            runtime_dir=runtime_dir,
+            tracking_uri=os.getenv("MLFLOW_TRACKING_URI", default_tracking_uri),
             model_name=os.getenv("MODEL_NAME", "portfolio-risk-model"),
             model_alias=os.getenv("MODEL_ALIAS", "champion"),
             quality_threshold=float(os.getenv("QUALITY_THRESHOLD", "0.80")),
@@ -41,6 +43,11 @@ class Settings:
     def candidate_path(self) -> Path:
         return self.runtime_dir / "candidate.json"
 
+    @property
+    def artifact_dir(self) -> Path:
+        return self.runtime_dir / "mlflow" / "artifacts"
+
     def prepare(self) -> None:
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.artifact_dir.mkdir(parents=True, exist_ok=True)
 
