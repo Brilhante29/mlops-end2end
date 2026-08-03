@@ -1,6 +1,6 @@
 # #21 mlops-end2end
 
-> **371.941 seconds historical direct-stage baseline:** retained for comparison, but not current Airflow task-execution evidence. ROC AUC was `0.928441` and inference p95 was `285.557 ms`.
+> **58.696 seconds median time to production:** three successful Airflow DagRuns, ROC AUC `0.928`, inference p95 `72.733 ms`, `160.275 req/s`, and zero failures.
 
 This repository proves the complete operational path around a small CPU model: orchestration, data validation, experiment tracking, registry governance, quality-gated promotion, inference, telemetry, and reproducible evidence.
 
@@ -15,24 +15,23 @@ No API key, cloud account, GPU, host Python, shell-specific script, or manual pr
 
 ## Benchmark
 
-The historical baseline starts inside the container before local metadata stores are initialized, but it executed the stage functions directly. The current source now runs a real Airflow `dags test` DagRun; publication waits for three successful same-image runs and a new median.
+Three clean lifecycle runs execute the versioned DAG through Airflow `dags test`, initialize the direct SQLite MLflow registry, quality-gate and promote the model, then stop the primary timer when the alias-backed FastAPI health check succeeds.
 
-| Metric | Baseline | What it proves |
-|---|---:|---|
-| Time to production | **371.941 s** | Full lifecycle friction from empty runtime to healthy promoted model |
-| ROC AUC | **0.928441** | Candidate quality before promotion |
-| Inference p95 | **285.557 ms** | Serving latency after promotion |
-| Throughput | **37.975 req/s** | CPU request capacity for the fixed fixture |
-| Image size | not captured in this run | Supplementary image footprint, not part of the primary gate |
+| Metric | Median | Samples |
+|---|---:|---:|
+| Time to production | **58.696 s** | 57.373 / 59.140 / 58.696 s |
+| ROC AUC | **0.928** | identical quality across 3 runs |
+| Inference p95 | **72.733 ms** | 300 requests/run after 20 warmups |
+| Throughput | **160.275 req/s** | concurrency 8 |
+| Image size | **1,532,464,403 bytes** | immutable source image |
 
-This committed JSON is historical evidence from the direct-stage path. It is intentionally stale after the Airflow task-execution correction and is not the publication result.
+The time-to-production range is `1.767 s`, or `3.0104%` of the median. All runs completed with zero failures. Source commit: `9e8c76d`; image digest: `sha256:5228391a3b888a26c0fa5263d5a2393694ee6f862a80e48d7839ad22a2fb541f`.
 
-| Lifecycle stage | Current run |
+| Lifecycle stage | Median |
 |---|---:|
-| MLflow startup | 93.637 s |
-| Airflow metadata migration | 37.410 s |
-| Airflow stages, training, registry, and promotion | 165.203 s |
-| Alias-backed API startup | 75.691 s |
+| Airflow metadata migration | 9.684 s |
+| Airflow DagRun, training, registry, and promotion | 38.355 s |
+| Alias-backed API startup | 10.581 s |
 
 The command prints the complete JSON result. A bind mount can persist it:
 
@@ -45,7 +44,7 @@ docker run --rm \
 
 PowerShell uses the same image with `${PWD}` in the volume value.
 
-Publication evidence runs three clean lifecycle containers and writes raw V1 plus provenance-rich V2 JSON:
+Publication evidence runs three clean lifecycle containers and writes raw V1 plus provenance-rich V2 JSON. In V2, `measured_iterations=3` counts lifecycle samples; `warmup_iterations=20` and inference concurrency 8 apply only to the secondary HTTP measurement:
 
 ```bash
 python tools/publish_benchmark.py

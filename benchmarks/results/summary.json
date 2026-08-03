@@ -1,14 +1,14 @@
 {
-  "command": "docker run --rm mlops-end2end",
+  "command": "python tools/publish_benchmark.py --image mlops-end2end:benchmark --repeat 3",
   "environment": {
     "airflow": "3.3.0",
     "architecture": "x86_64",
     "concurrency": 8,
-    "cpu_count": 16,
+    "cpu_count": 6,
     "inference_window": "after API readiness and warmup",
     "lifecycle_window": "process start through alias-backed API readiness",
     "mlflow": "3.14.0",
-    "os": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
     "python": "3.12.13",
     "random_seed": 42,
     "requests": 300,
@@ -17,32 +17,73 @@
     "warmup_requests": 20
   },
   "failures": 0,
+  "measured_lifecycle_runs": 3,
   "metric": "time_to_production_seconds",
   "metrics": {
     "accuracy": 0.87,
-    "airflow_migration_seconds": 37.41,
-    "api_startup_seconds": 75.691,
-    "inference_p50_ms": 206.061,
-    "inference_p95_ms": 285.557,
-    "inference_requests_per_second": 37.975,
-    "mlflow_startup_seconds": 93.637,
-    "pipeline_seconds": 165.203,
-    "roc_auc": 0.928441,
-    "time_to_production_seconds": 371.941
+    "aggregation": "median_per_metric_across_clean_lifecycle_runs",
+    "airflow_dag_run_seconds": 38.355,
+    "airflow_migration_seconds": 9.684,
+    "api_startup_seconds": 10.581,
+    "inference_p50_ms": 48.604,
+    "inference_p95_ms": 72.733,
+    "inference_requests_per_second": 160.275,
+    "maximum_time_to_production_seconds": 59.14,
+    "minimum_time_to_production_seconds": 57.373,
+    "range_relative_to_median": 0.030104,
+    "range_seconds": 1.767,
+    "repetitions": 3,
+    "roc_auc": 0.928,
+    "runs": [
+      {
+        "inference_p95_ms": 73.395,
+        "inference_requests_per_second": 155.226,
+        "roc_auc": 0.928441,
+        "run": 1,
+        "time_to_production_seconds": 57.373
+      },
+      {
+        "inference_p95_ms": 69.174,
+        "inference_requests_per_second": 161.482,
+        "roc_auc": 0.928441,
+        "run": 2,
+        "time_to_production_seconds": 59.14
+      },
+      {
+        "inference_p95_ms": 72.733,
+        "inference_requests_per_second": 160.275,
+        "roc_auc": 0.928441,
+        "run": 3,
+        "time_to_production_seconds": 58.696
+      }
+    ],
+    "time_to_production_seconds": 58.696
   },
   "project": "mlops-end2end",
   "proof": {
+    "airflow_execution_mode": "dags-test",
+    "airflow_logical_date": "2026-01-01T00:00:00+00:00",
     "dag_id": "mlops_end2end",
+    "image_digest": "sha256:5228391a3b888a26c0fa5263d5a2393694ee6f862a80e48d7839ad22a2fb541f",
+    "image_size_bytes": 1532464403,
     "lifecycle_completed": true,
+    "mlflow_tracking_backend": "sqlite-direct",
     "model_alias": "champion",
     "model_version": "1",
     "prometheus_predictions_exported": true,
     "quality_threshold": 0.8,
+    "raw_artifacts": [
+      "benchmarks/results/runs/lifecycle-run-1.json",
+      "benchmarks/results/runs/lifecycle-run-2.json",
+      "benchmarks/results/runs/lifecycle-run-3.json"
+    ],
     "readiness_payload_parsed": true,
     "registered_model": "portfolio-risk-model",
-    "run_id": "3fc103203e814820b34d76f03d234a35"
+    "run_id": "51f7448b61a243328b8fd20b3fc66080",
+    "source_commit": "9e8c76d02a2a7f10c8ccee7049cd21fc47b9db12"
   },
-  "timestamp": "2026-07-16T06:03:05.237906+00:00",
+  "repeat": 3,
+  "timestamp": "2026-08-03T02:47:24.110102+00:00",
   "unit": "seconds",
-  "value": 371.941
+  "value": 58.696
 }

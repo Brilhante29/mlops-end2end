@@ -1,10 +1,10 @@
-# #21 mlops-end2end: time_to_production_seconds = 371.94 seconds
+# #21 mlops-end2end: time_to_production_seconds = 58.696 seconds
 
 A single local-first command validates data, trains and quality-gates a model, promotes an MLflow alias, serves it with FastAPI, exports Prometheus metrics, and measures elapsed time to production.
 
 This repository belongs to the MLOps and Data Platform program. Its job is narrow: prove the measurable claim through the selected component pack before adding unrelated infrastructure or features.
 
-The benchmark is the proof. time_to_production_seconds = 371.94 seconds.  The result is stored in `benchmarks/results/summary.json` and can be reproduced from the Docker/local path.
+The benchmark is the proof. time_to_production_seconds = 58.696 seconds.  The result is stored in `benchmarks/results/summary.json` and can be reproduced from the Docker/local path.
 
 The important architecture decision is pipeline. The problem is an ordered artifact lifecycle with retryable stages; pipeline architecture makes data, candidate, promotion, service, and evidence transitions explicit.
 

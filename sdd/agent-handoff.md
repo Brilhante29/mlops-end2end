@@ -39,3 +39,5 @@ Ship #21 as the first executable foundation of the MLOps and Data Platform progr
 - Service failure: confirm alias resolution and pyfunc `predict_proba` output before loosening health checks.
 - Slow result: report environment and stage evidence before optimizing or removing required lifecycle work.
 
+## Current Evidence\n\n- Source commit: 9e8c76d02a2a7f10c8ccee7049cd21fc47b9db12.\n- Image: sha256:5228391a3b888a26c0fa5263d5a2393694ee6f862a80e48d7839ad22a2fb541f.\n- Lifecycle samples: 57.373 s, 59.140 s, 58.696 s; median 58.696 s; zero failures.\n- Airflow execution: dags-test; MLflow tracking: sqlite-direct; alias: champion.\n- V2:
+epeat=3, measured_iterations=3, raw artifact digest sha256:f980b4a86c54fbcb66db888ee22a4d633c32726f7118cef2c609572a23246a81.\n- Remaining gate: commit/push evidence and inspect exact-head CI.\n

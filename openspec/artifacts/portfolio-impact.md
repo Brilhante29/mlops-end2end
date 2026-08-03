@@ -28,4 +28,4 @@ This repository is not a standalone demo. It is one part of the MLOps and Data P
 
 ## Post Angle
 
-Open with time_to_production_seconds = 371.94 seconds, then explain why the architecture and local-first path make the result reproducible.
+Open with time_to_production_seconds = 58.696 seconds, then explain why the architecture and local-first path make the result reproducible.

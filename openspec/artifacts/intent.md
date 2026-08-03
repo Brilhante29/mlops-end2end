@@ -29,5 +29,5 @@ Establishes the reusable model lifecycle used by later data quality, feature ser
 
 ## Public Proof
 
-- Benchmark: time_to_production_seconds = 371.94 seconds
+- Benchmark: time_to_production_seconds = 58.696 seconds
 - Result path: `benchmarks/results/summary.json`

@@ -46,6 +46,14 @@ jobs:
           --cov-report=term-missing
           --cov-fail-under=80
 
+      - name: Validate committed publication evidence
+        run: >-
+          docker run --rm
+          --volume "${{ github.workspace }}:/repo:ro"
+          --entrypoint python
+          mlops-end2end:${{ github.sha }}
+          /repo/tools/validate_publication.py
+
       - name: Run train-to-production benchmark
         run: |
           mkdir -p benchmarks/results

@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted; package versions and the base-image OCI digest are pinned, with runtime reconfirmation pending after the evidence update.
+Accepted; package versions and the base-image OCI digest are pinned, with runtime versions reconfirmed in the three-run publication evidence.
 
 ## Selected Stack
 

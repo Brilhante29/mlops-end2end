@@ -1,0 +1,50 @@
+{
+  "command": "docker run --rm mlops-end2end",
+  "environment": {
+    "airflow": "3.3.0",
+    "architecture": "x86_64",
+    "concurrency": 8,
+    "cpu_count": 6,
+    "inference_window": "after API readiness and warmup",
+    "lifecycle_window": "process start through alias-backed API readiness",
+    "mlflow": "3.14.0",
+    "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "python": "3.12.13",
+    "random_seed": 42,
+    "requests": 300,
+    "sample_count": 1200,
+    "scikit_learn": "1.9.0",
+    "warmup_requests": 20
+  },
+  "failures": 0,
+  "metric": "time_to_production_seconds",
+  "metrics": {
+    "accuracy": 0.87,
+    "airflow_dag_run_seconds": 38.914,
+    "airflow_migration_seconds": 9.643,
+    "api_startup_seconds": 10.576,
+    "inference_p50_ms": 48.096,
+    "inference_p95_ms": 69.174,
+    "inference_requests_per_second": 161.482,
+    "roc_auc": 0.928441,
+    "time_to_production_seconds": 59.14
+  },
+  "project": "mlops-end2end",
+  "proof": {
+    "airflow_execution_mode": "dags-test",
+    "airflow_logical_date": "2026-01-01T00:00:00+00:00",
+    "dag_id": "mlops_end2end",
+    "lifecycle_completed": true,
+    "mlflow_tracking_backend": "sqlite-direct",
+    "model_alias": "champion",
+    "model_version": "1",
+    "prometheus_predictions_exported": true,
+    "quality_threshold": 0.8,
+    "readiness_payload_parsed": true,
+    "registered_model": "portfolio-risk-model",
+    "run_id": "1802eb54a6dc4405a56244512d95288d"
+  },
+  "timestamp": "2026-08-03T02:46:21.185698+00:00",
+  "unit": "seconds",
+  "value": 59.14
+}

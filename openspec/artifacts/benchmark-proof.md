@@ -4,7 +4,7 @@
 
 - Metric: `time_to_production_seconds`
 - Unit: `seconds`
-- Result: time_to_production_seconds = 371.94 seconds
+- Result: time_to_production_seconds = 58.696 seconds
 - Result path: `benchmarks/results/summary.json`
 
 ## Command

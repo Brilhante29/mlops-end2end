@@ -17,7 +17,7 @@
 
 ## Publication
 
-- [ ] Validate project.
+- [x] Validate project locally.
 - [ ] Confirm published CI is green.
-- [ ] Confirm article uses committed benchmark result.
-- [ ] Confirm `voice-check.md` verdict is aligned or intentionally overridden.
+- [x] Confirm article uses the committed `58.696 s` median.
+- [x] Confirm `voice-check.md` verdict remains aligned.

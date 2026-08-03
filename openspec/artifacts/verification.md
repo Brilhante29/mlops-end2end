@@ -16,9 +16,9 @@
 ## Checks
 
 - Component pack selected: `mlops-data-platform`
-- Benchmark line: time_to_production_seconds = 371.94 seconds
+- Benchmark line: time_to_production_seconds = 58.696 seconds
 - Voice verdict: aligned
 
 ## Remaining Risk
 
-The generated plan is a starting point. Re-run this tool or edit the artifacts when code, benchmark, or architecture decisions change.
+Local implementation, image, three-run benchmark, V1/V2 linkage, and schema gates pass. Exact-head GitHub Actions and central publication evidence remain before status can become `published`.
