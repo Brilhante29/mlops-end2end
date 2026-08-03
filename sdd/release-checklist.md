@@ -11,6 +11,6 @@
 - [x] Consolidated V1/V2 JSON and README report median `58.696 s`.
 - [x] Reuse review is resolved and kit improvements are synced.
 - [x] Git status contains only intentional raw/publication evidence and documentation.
-- [ ] Public repository metadata, topics, default branch, and description are set.
-- [ ] GitHub Actions is green and benchmark artifact is downloadable.
+- [x] Public repository description and ten focused topics are set; the published branch is the default branch.
+- [x] Evidence HEAD `0249659` passed GitHub Actions run `30780951251` and uploaded the benchmark artifact.
 

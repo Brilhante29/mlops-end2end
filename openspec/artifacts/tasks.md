@@ -18,6 +18,6 @@
 ## Publication
 
 - [x] Validate project locally.
-- [ ] Confirm published CI is green.
+- [x] Confirm evidence CI `30780951251` is green.
 - [x] Confirm article uses the committed `58.696 s` median.
 - [x] Confirm `voice-check.md` verdict remains aligned.

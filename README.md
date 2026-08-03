@@ -2,6 +2,8 @@
 
 > **58.696 seconds median time to production:** three successful Airflow DagRuns, ROC AUC `0.928`, inference p95 `72.733 ms`, `160.275 req/s`, and zero failures.
 
+**Status:** published; evidence HEAD `0249659` passed every gate in [GitHub Actions run 30780951251](https://github.com/Brilhante29/mlops-end2end/actions/runs/30780951251).
+
 This repository proves the complete operational path around a small CPU model: orchestration, data validation, experiment tracking, registry governance, quality-gated promotion, inference, telemetry, and reproducible evidence.
 
 ## Run

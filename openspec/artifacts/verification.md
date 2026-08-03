@@ -21,4 +21,4 @@
 
 ## Remaining Risk
 
-Local implementation, image, three-run benchmark, V1/V2 linkage, and schema gates pass. Exact-head GitHub Actions and central publication evidence remain before status can become `published`.
+Local implementation, image, three-run benchmark, V1/V2 linkage, and schema gates pass. Evidence HEAD `0249659` passed GitHub Actions run `30780951251`; its proof is embedded at `.portfolio-control/PUBLICATION_EVIDENCE.json` and registered centrally.
