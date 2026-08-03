@@ -36,6 +36,24 @@ def combined_digest(paths: list[str]) -> str:
     return f"sha256:{hashlib.sha256(payload).hexdigest()}"
 
 
+def combined_git_digest(paths: list[str], revision: str) -> str:
+    lines: list[str] = []
+    for relative in sorted(paths):
+        result = subprocess.run(
+            ["git", "-c", f"safe.directory={ROOT}", "show", f"{revision}:{relative}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"cannot read {relative} from {revision}: {result.stderr.decode(errors='replace')}"
+            )
+        lines.append(f"{relative}|{hashlib.sha256(result.stdout).hexdigest()}")
+    payload = ("\n".join(lines) + "\n").encode()
+    return f"sha256:{hashlib.sha256(payload).hexdigest()}"
+
+
 def median(values: list[float]) -> float:
     return round(float(statistics.median(values)), 3)
 
@@ -243,23 +261,25 @@ def main() -> None:
         "benchmark_id": "mlops.lifecycle.v2",
         "workload": {
             "version": "2.0.0",
-            "fixture_digest": combined_digest(
+            "fixture_digest": combined_git_digest(
                 [
                     "dags/mlops_end2end.py",
                     "src/mlops_end2end/adapters/data.py",
                     "src/mlops_end2end/adapters/training.py",
                     "src/mlops_end2end/application/promotion.py",
                     "src/mlops_end2end/domain/quality.py",
-                ]
+                ],
+                source_commit,
             ),
-            "config_digest": combined_digest(
+            "config_digest": combined_git_digest(
                 [
                     "Dockerfile",
                     "benchmarks/config/mlops-lifecycle-v2.json",
                     "src/mlops_end2end/config.py",
                     "src/mlops_end2end/runner.py",
                     "tools/publish_benchmark.py",
-                ]
+                ],
+                source_commit,
             ),
             "warmup_iterations": int(environment["warmup_requests"]),
             "measured_iterations": args.repeat,
@@ -288,7 +308,9 @@ def main() -> None:
             "clean_tree": True,
             "image_ref": args.image,
             "image_digest": image_digest,
-            "dependency_lock_digest": combined_digest(["pyproject.toml", "requirements.txt"]),
+            "dependency_lock_digest": combined_git_digest(
+                ["pyproject.toml", "requirements.txt"], source_commit
+            ),
             "producer": "local",
             "artifact_digest": artifact_digest,
         },

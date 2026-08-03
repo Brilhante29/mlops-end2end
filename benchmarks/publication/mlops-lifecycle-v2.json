@@ -247,8 +247,8 @@
   "schema_version": 2,
   "workload": {
     "concurrency": 1,
-    "config_digest": "sha256:76bd526381482136a1e20ce5f1b27defa4c7867ff9c7dd9d9ea6d19c87c8e2cc",
-    "fixture_digest": "sha256:c0b5f000627aaa40c86f5a29180de1c2b91c63a7aef3874af4d7c15e6e4ff332",
+    "config_digest": "sha256:b30ed90c272f721eab01fca07d9af2502cba2052fd8b7beec9d2986ca99c096f",
+    "fixture_digest": "sha256:849b70bcf2cb61e70f6a84d51e0cccdc5f03607c32fa34c60bdc1471e9922989",
     "measured_iterations": 3,
     "version": "2.0.0",
     "warmup_iterations": 20
