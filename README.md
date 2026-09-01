@@ -1,4 +1,4 @@
-# #21 mlops-end2end
+# End-to-End MLOps Pipeline
 
 > **58.696 seconds median time to production:** three successful Airflow DagRuns, ROC AUC `0.928`, inference p95 `72.733 ms`, `160.275 req/s`, and zero failures.
 
