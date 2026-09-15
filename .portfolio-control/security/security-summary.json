@@ -1,0 +1,22 @@
+{
+  "disposition": "documented",
+  "fixable": 22,
+  "fixable_packages": {
+    "GitPython": 10,
+    "aiohttp": 1,
+    "cryptography": 2,
+    "curl": 1,
+    "libcurl3-gnutls": 1,
+    "libcurl4": 1,
+    "mlflow": 1,
+    "quinn-proto": 2,
+    "sqlparse": 3
+  },
+  "generated_at": "2026-08-21T14:36:07.295808Z",
+  "high_critical_total": 117,
+  "image": "mlops-end2end:sec",
+  "no_upstream_fix": 95,
+  "rationale": "Base images are pinned by digest so benchmark provenance stays comparable. Rebuilding does not clear these advisories: the current upstream digest carries the same set. Applying apt-get upgrade would make the image non-deterministic and change image_digest between builds of the same commit, breaking the V2 comparability contract.",
+  "repository": "mlops-end2end",
+  "sbom_packages": 2441
+}
