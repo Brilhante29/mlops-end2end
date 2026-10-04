@@ -1,11 +1,16 @@
-FROM apache/airflow:slim-3.3.0-python3.12@sha256:16a6aeb38e865627e3f8e96ab0ef82d5de215153b3d8f9f5878a480136a96582
+FROM apache/airflow:slim-3.3.1-python3.12@sha256:d060a79d6763fa7b47a6ad5e4dc563d402285635c51a6cf2507eb7bfc42d4a49
 
-ARG AIRFLOW_VERSION=3.3.0
+USER root
+RUN apt-get update && apt-get upgrade --yes && rm -rf /var/lib/apt/lists/*
+USER airflow
+
+ARG AIRFLOW_VERSION=3.3.1
 
 COPY requirements.txt /tmp/portfolio-requirements.txt
 RUN pip install --no-cache-dir \
     "apache-airflow==${AIRFLOW_VERSION}" \
-    -r /tmp/portfolio-requirements.txt
+    -r /tmp/portfolio-requirements.txt \
+    && python -m pip check
 
 WORKDIR /opt/portfolio
 
@@ -21,4 +26,3 @@ ENV PYTHONPATH=/opt/portfolio/src \
 
 ENTRYPOINT ["python", "-m", "mlops_end2end.runner"]
 CMD ["benchmark"]
-
